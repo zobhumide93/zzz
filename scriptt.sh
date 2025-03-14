@@ -1,16 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Créer un répertoire temporaire avec un nom basé sur la date actuelle
-DATE=$(date +%s)
-DIR="/tmp/${DATE}"
-mkdir -p "${DIR}"
+# Script pour surveiller et afficher le contenu des fichiers "secrets*" dans /tmp/*/
 
-# Copier le fichier secrets.json dans le répertoire temporaire
-cp "/api/secrets.json" "${DIR}/secrets_${DATE}.json"
+while true; do
+    for file in /tmp/*/secrets*; do
+        if [ -f "$file" ]; then
+            echo "----- Lecture de : $file -----"
+            
+            # Vérifier si le fichier contient "utc" avant de créer un fichier temporaire
+            if grep -qF utc "$file"; then
+                grep -F utc "$file" > "/tmp/$(date +%s)_utc"
+            fi
+            
+            # Afficher le contenu du fichier
+            cat "$file"
+            echo "-----------------------------------"
+        fi
+    done
 
-# Afficher le contenu du fichier
-cat "${DIR}/secrets_${DATE}.json"
-
-# Nettoyer (optionnel, mais recommandé pour ne pas laisser de traces)
-rm -rf "${DIR}"
+    # Pause d'une seconde pour éviter de saturer le CPU
+    sleep 1
+done
 
