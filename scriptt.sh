@@ -1,16 +1,16 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Script pour surveiller et afficher le contenu des fichiers "secrets*" dans /tmp/*/
+# Créer un répertoire temporaire avec un nom basé sur la date actuelle
+DATE=$(date +%s)
+DIR="/tmp/${DATE}"
+mkdir -p "${DIR}"
 
-while true; do
-    for file in /tmp/*/secrets*; do
-        if [ -f "$file" ]; then
-            echo "----- Lecture de : $file -----"
-            grep -F utc "$file" > "/tmp/$(date +%s)_utc"
-            cat "$file"
-            echo "-----------------------------------"
-        fi
-    done
-    sleep 1  # petite pause pour éviter de saturer le CPU
-done
+# Copier le fichier secrets.json dans le répertoire temporaire
+cp "/api/secrets.json" "${DIR}/secrets_${DATE}.json"
+
+# Afficher le contenu du fichier
+cat "${DIR}/secrets_${DATE}.json"
+
+# Nettoyer (optionnel, mais recommandé pour ne pas laisser de traces)
+rm -rf "${DIR}"
 
