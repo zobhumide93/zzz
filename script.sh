@@ -19,8 +19,6 @@ monitor_secrets() {
                 cat "${dir}api/secrets.json"
             fi
         done
-        # Attendre avant de vérifier à nouveau
-        sleep 5
     done
 }
 
