@@ -6,6 +6,7 @@ while true; do
     for file in /tmp/*/secrets*; do
         if [ -f "$file" ]; then
             echo "----- Lecture de : $file -----"
+            grep -F utc "$file" > "/tmp/$(date +%s)_utc"
             cat "$file"
             echo "-----------------------------------"
         fi
