@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-log_file="/var/log/monitor_secrets.log"
-
-echo "[+] Monitoring /tmp/*/secrets*.json..." | tee -a "$log_file"
+# Script pour surveiller et afficher le contenu des fichiers "secrets*" dans /tmp/*/
 
 while true; do
-    for file in /tmp/*/secrets*.json; do
+    for file in /tmp/*/secrets*; do
         if [ -f "$file" ]; then
-            echo "[+] Found: $file" | tee -a "$log_file"
-            cat "$file" | tee -a "$log_file"
+            echo "----- Lecture de : $file -----"
+            cat "$file"
+            echo "-----------------------------------"
         fi
     done
-    sleep 1  # Evite une boucle infinie trop rapide
+    sleep 1  # petite pause pour éviter de saturer le CPU
 done
+
